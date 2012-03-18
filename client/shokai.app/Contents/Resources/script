@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+Dir.glob(File.dirname(__FILE__)+'/gems/*').each do |gem|
+  $:.unshift gem+'/lib'
+end
+
+require 'httpclient'
+
+c = HTTPClient.new
+ARGV.each do |name|
+  next unless File.exists? name
+  puts res = c.post_content('http://shookai.org/face/file', {:file => open(name)})
+  if res =~ /^https?:\/\/.+/
+    system "echo #{res} | pbcopy"
+    system "open #{res}"
+  end
+end
