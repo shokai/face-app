@@ -1,13 +1,19 @@
 #!/usr/bin/env ruby
 require 'digest/md5'
 
-app = "shokai.app"
-token = Digest::MD5.hexdigest "#{Time.now.to_i}_#{`whoami`}"
+app = "face.app"
+token = Digest::MD5.hexdigest "#{Time.now.to_i}_#{`whoami`.strip}"
 
-system "cp -R #{File.dirname(__FILE__)}/client/#{app} ./"
-["#{app}/Contents/Resources/token.rb",
-"server/helpers/token.rb"].each do |fname|
+puts "generate your app"
+system "cp -R #{File.dirname(__FILE__)}/client/face.app #{File.dirname(__FILE__)}/"
+system "sips -s format icns icon.png -z 128 128 --out appIcon.icns"
+File.rename('appIcon.icns', "#{File.dirname(__FILE__)}/face.app/Contents/Resources/appIcon.icns")
+
+["#{File.dirname(__FILE__)}/face.app/Contents/Resources/token.rb",
+ "#{File.dirname(__FILE__)}/server/helpers/token.rb"].each do |fname|
   open(fname, 'w+'){|f|
     f.write "def face_token\n  '#{token}'\nend"
   }
 end
+
+puts "success!!"
