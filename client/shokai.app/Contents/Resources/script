@@ -1,17 +1,26 @@
 #!/usr/bin/env ruby
 
+api = 'http://shookai.org/face/file'
+#api = 'http://localhost:8080/file'
+
 Dir.glob(File.dirname(__FILE__)+'/gems/*').each do |gem|
   $:.unshift gem+'/lib'
 end
 
 require 'httpclient'
+require File.dirname(__FILE__)+'/token'
 
 c = HTTPClient.new
 ARGV.each do |name|
   next unless File.exists? name
-  puts res = c.post_content('http://shookai.org/face/file', {:file => open(name)})
-  if res =~ /^https?:\/\/.+/
-    system "echo #{res} | pbcopy"
-    system "open #{res}"
+  begin
+    puts res = c.post_content(api, {:file => open(name), :token => face_token})
+    if res =~ /^https?:\/\/.+/
+      system "echo #{res} | pbcopy"
+      system "open #{res}"
+    end
+  rescue => e
+    STDERR.puts e.res.body
+    system "osascript -e 'tell application \"shokai\" to display dialog \"uplaod error - #{e.res.body}\"'"
   end
 end

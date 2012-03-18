@@ -3,6 +3,9 @@ post '/file' do
   if !params[:file] or !params[:file][:tempfile]
     status 400
     @mes = 'bad request'
+  elsif face_token != params[:token]
+    status 401
+    @mes = 'bad token'
   else
     begin
       data = params[:file][:tempfile].read
