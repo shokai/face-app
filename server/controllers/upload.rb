@@ -25,3 +25,13 @@ post '/file' do
     end
   end
 end
+
+get '/id/:hex_id' do
+  unless fname = Dir.glob("#{data_dir}/#{params[:hex_id]}.*").first.to_s.split(/\//).last
+    status 404
+    @mes = "not found"
+  else
+    status 200
+    @mes = "#{data_dir_url}/#{fname}"
+  end
+end

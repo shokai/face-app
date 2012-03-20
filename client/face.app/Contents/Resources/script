@@ -6,6 +6,9 @@ end
 
 require 'yaml'
 require 'httpclient'
+require 'digest/md5'
+require 'uri'
+require 'net/http'
 
 begin
   @@conf = YAML::load open(File.dirname(__FILE__)+'/config.yml').read
@@ -18,11 +21,22 @@ c = HTTPClient.new
 ARGV.each do |name|
   next unless File.exists? name
   begin
-    puts res = c.post_content(@@conf['api']+'/file', {:file => open(name), :id => @@conf['id']})
+    hash = Digest::MD5.hexdigest open(name).read
+    uri = URI.parse @@conf['api']+'/id/'+hash
+    check = Net::HTTP.start(uri.host, uri.port).get(uri.path)
+    if check.code.to_i == 200
+      res = check.body
+      puts 'cached'
+    else
+      res = c.post_content(@@conf['api']+'/file', {:file => open(name), :id => @@conf['id']})
+    end
     if res =~ /^https?:\/\/.+/
+      puts res
       system "echo #{res} | pbcopy"
       system "open #{res}"
     end
+  rescue NoMethodError, StandardError => e
+    STDERR.puts e
   rescue => e
     STDERR.puts e.res.body
     system "osascript -e 'tell application \"shokai\" to display dialog \"uplaod error - #{e.res.body}\"'"
