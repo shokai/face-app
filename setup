@@ -13,7 +13,7 @@ system "sips -s format icns icon.png -z 128 128 --out appIcon.icns"
 File.rename('appIcon.icns', "#{app_res_dir}/appIcon.icns")
 open("#{app_res_dir}/config.yml", 'w+') do |f|
   conf = YAML::load open("#{File.dirname(__FILE__)}/config.yml").read
-  conf[:id] = id
+  conf['id'] = id
   f.puts conf.to_yaml
 end
 
