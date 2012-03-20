@@ -26,7 +26,6 @@ ARGV.each do |name|
     check = Net::HTTP.start(uri.host, uri.port).get(uri.path)
     if check.code.to_i == 200
       res = check.body
-      puts 'cached'
     else
       res = c.post_content(@@conf['api']+'/file', {:file => open(name), :id => @@conf['id']})
     end
@@ -41,4 +40,5 @@ ARGV.each do |name|
     STDERR.puts e.res.body
     system "osascript -e 'tell application \"shokai\" to display dialog \"uplaod error - #{e.res.body}\"'"
   end
+  sleep 1
 end
