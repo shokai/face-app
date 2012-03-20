@@ -1,19 +1,20 @@
 #!/usr/bin/env ruby
 require 'digest/md5'
+require 'yaml'
 
 app = "face.app"
-token = Digest::MD5.hexdigest "#{Time.now.to_i}_#{`whoami`.strip}"
+id = Digest::MD5.hexdigest "#{Time.now.to_i}_#{`whoami`.strip}"
+app_res_dir = "./#{app}/Contents/Resources"
 
 puts "generate your app"
-system "cp -R #{File.dirname(__FILE__)}/client/face.app #{File.dirname(__FILE__)}/"
+system "rm -rf #{app}" if File.exists? app
+system "cp -R #{File.dirname(__FILE__)}/client/#{app} ./"
 system "sips -s format icns icon.png -z 128 128 --out appIcon.icns"
-File.rename('appIcon.icns', "#{File.dirname(__FILE__)}/face.app/Contents/Resources/appIcon.icns")
-
-["#{File.dirname(__FILE__)}/face.app/Contents/Resources/token.rb",
- "#{File.dirname(__FILE__)}/server/helpers/token.rb"].each do |fname|
-  open(fname, 'w+'){|f|
-    f.write "def face_token\n  '#{token}'\nend"
-  }
+File.rename('appIcon.icns', "#{app_res_dir}/appIcon.icns")
+open("#{app_res_dir}/config.yml", 'w+') do |f|
+  conf = YAML::load open("#{File.dirname(__FILE__)}/config.yml").read
+  conf[:id] = id
+  f.puts conf.to_yaml
 end
 
 puts "success!!"

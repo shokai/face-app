@@ -2,6 +2,7 @@
 *.tmp
 ~*
 .sass-cache
-config.yaml
+config.yml
 .DS_Store
 public
+face.app
