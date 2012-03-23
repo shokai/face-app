@@ -3,9 +3,11 @@ require 'digest/md5'
 class Blob
   include Mongoid::Document
   field :uploaded_at, :type => Time, :default => lambda{Time.now}
+  field :modified_at, :type => Time, :default => lambda{Time.now}
   field :md5, :type => String, :allow_blank => false
   field :mime_type, :type => String, :allow_blank => false
   field :ext, :type => String, :default => nil
+  field :size, :type => Integer, :allow_blank => false
 
   def self.find_by_md5(md5)
     self.where(:md5 => md5)
