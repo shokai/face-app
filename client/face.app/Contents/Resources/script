@@ -25,9 +25,11 @@ ARGV.each do |name|
     uri = URI.parse @@conf['api']+'/id/'+hash
     check = Net::HTTP.start(uri.host, uri.port).get(uri.path)
     if check.code.to_i == 200
+      puts 'already uploaded'
       res = check.body
     else
-      res = c.post_content(@@conf['api']+'/file', {:file => open(name), :id => @@conf['id']})
+      puts 'upload'
+      res = c.post_content(@@conf['api']+'/file', {:file => open(name), :from => @@conf['id']})
     end
     if res =~ /^https?:\/\/.+/
       puts res
