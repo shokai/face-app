@@ -1,21 +1,21 @@
 - content_for :title do
   = @title
 
+%h2 files
 %div
-  %ul
-    - @blobs.each do |b|
-      %li
-        %ul
-          %li
-            md5 : #{b.md5}
-          %li
-            type : #{b.mime_type}
-          %li
-            uploaded_at : #{b.uploaded_at}
-          %li
-            - url = "#{app_root}/#{b.file_path}"
-            - if b.mime_type =~ /^image/
-              %img{:src => url}
-            - else
-              URL :
-              %a{:href => url}= url
+  - @msgs.each do |msg|
+    %div
+      %h3.md5= msg.md5
+      %div
+        %span.mime_type [#{msg.blob.mime_type}]
+        %span.from from #{msg.from}
+      %div
+        %span.uploaded_at at [#{msg.blob.uploaded_at}]
+      %div
+        - url = "#{app_root}/#{msg.blob.file_path}"
+        - if msg.blob.mime_type =~ /^image/
+          %a{:href => url}
+            %img{:src => url}
+        - else
+          URL :
+          %a{:href => url}= url

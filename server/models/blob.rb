@@ -10,7 +10,7 @@ module FaceApp
     field :size, :type => Integer, :allow_blank => false
 
     def self.find_by_md5(md5)
-      self.where(:md5 => md5)
+      self.where(:md5 => md5).first
     end
 
     def self.find_by_data(data)

@@ -22,12 +22,13 @@ ARGV.each do |name|
   next unless File.exists? name
   begin
     hash = Digest::MD5.hexdigest open(name).read
-    uri = URI.parse @@conf['api']+'/id/'+hash
-    check = Net::HTTP.start(uri.host, uri.port).get(uri.path)
+    uri = URI.parse @@conf['api']+'/md5'
+    check = Net::HTTP.start(uri.host, uri.port).
+      post(uri.path, {:from => @@conf['id'], :md5 => hash}.map{|k,v|"#{k}=#{URI.encode v}"}.join('&'))
     if check.code.to_i == 200
       puts 'already uploaded'
       res = check.body
-    else
+    elsif check.code.to_i == 404
       puts 'upload'
       res = c.post_content(@@conf['api']+'/file', {:file => open(name), :from => @@conf['id']})
     end
