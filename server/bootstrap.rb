@@ -10,6 +10,7 @@ require 'haml'
 require 'sass'
 require 'fileutils'
 require 'digest/md5'
+require 'rss'
 
 begin
   @@conf = YAML::load open(File.dirname(__FILE__)+'/config.yml').read

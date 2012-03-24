@@ -9,6 +9,8 @@
   %body
     %div#content
       %div#header
+        %div.right
+          %a.feed{:href => "#{app_root}/rss"} rss
         %h1
           != yield_content :title
       %div#main

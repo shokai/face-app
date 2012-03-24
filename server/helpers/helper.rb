@@ -16,3 +16,9 @@ end
 def data_dir_url
   "#{app_root}/#{data_dir_name}"
 end
+
+class Fixnum
+  def to_3digits
+    self.to_s.reverse.split(/(\d{3})/).select{|i|i.size>0}.join(',').reverse
+  end
+end
