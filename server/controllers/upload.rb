@@ -63,3 +63,15 @@ post '/md5' do
     end
   end
 end
+
+get '/f/:name/raw' do
+  name = params[:name]
+  md5 = name =~ /.+\..+/ ? name.scan(/^(.+)\./)[0][0] : name
+  unless b = FaceApp::Blob.where(:md5 => md5).first and b.file_name == name
+    status 404
+    @mes = 'not found'
+  else
+    content_type 'text/plain'
+    @mes = open(b.file_fullpath).read.to_s
+  end
+end

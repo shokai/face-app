@@ -19,4 +19,5 @@
             %img{:src => url}
         - else
           URL :
-          %a{:href => url}= url
+          %a{:href => url} download
+          %a{:href => "#{url}/raw"} raw
