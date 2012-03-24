@@ -7,17 +7,14 @@ post '/file' do
     begin
       data = params[:file][:tempfile].read
       md5 = Digest::MD5.hexdigest data
-      b = FaceApp::Blob.find_by_md5(md5).first || FaceApp::Blob.new(:md5 => md5)
-      b.mime_type = params[:file][:type]
-      b.ext = File.extname params[:file][:filename]
-      b.size = data.size
-      Dir.mkdir b.base_dir unless File.exists? b.base_dir
-      unless File.exists? b.file_fullpath and File.stat(b.file_fullpath).size == b.size
-        open(b.file_fullpath, 'w+') do |f|
-          f.write data
-        end
+      unless b = FaceApp::Blob.find_by_md5(md5).first
+        b = FaceApp::Blob.new(:md5 => md5,
+                              :mime_type => params[:file][:type],
+                              :ext => File.extname(params[:file][:filename]),
+                              :size => data.size)
+        b.save_file(data)
+        b.save
       end
-      b.save
       status 200
       @mes = "#{app_root}/#{b.file_path}"
     rescue => e
