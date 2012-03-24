@@ -18,7 +18,7 @@ get '/rss' do
       if m.blob.mime_type =~ /^image/
         i.description += "<p><a href=\"#{url}\"><img src=\"#{url}\"></a></p>"
       else
-        i.description += "<p><a href=\"#{url}\">#{url}</a></p>"
+        i.description += "<p>[<a href=\"#{url}\">download</a>]&nbsp;[<a href=\"#{url}/raw\">raw</a>]</p>"
       end
       i.date = m.uploaded_at
     }
