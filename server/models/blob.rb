@@ -17,9 +17,9 @@ module FaceApp
       self.find_by_md5 Digest::MD5.hexdigest data
     end
 
-    def save_file(file)
-      data = file.read if [File, Tempfile].include? file.class
-      Dir.mkdir base_dir unless File.exists? base_dir
+    def save_file(data)
+      data = data.read if [File, Tempfile].include? data.class
+      FileUtils.mkdir_p base_dir unless File.exists? base_dir
       unless File.exists? file_fullpath and File.stat(file_fullpath).size == size
         open(file_fullpath, 'w+') do |f|
           f.write data
