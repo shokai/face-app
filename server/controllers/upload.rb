@@ -7,11 +7,10 @@ post '/file' do
     begin
       data = params[:file][:tempfile].read
       md5 = Digest::MD5.hexdigest data
-      b = Blob.find_by_md5(md5).first || Blob.new(:md5 => md5)
+      b = FaceApp::Blob.find_by_md5(md5).first || FaceApp::Blob.new(:md5 => md5)
       b.mime_type = params[:file][:type]
       b.ext = File.extname params[:file][:filename]
       b.size = data.size
-      b.modified_at = Time.now
       Dir.mkdir b.base_dir unless File.exists? b.base_dir
       unless File.exists? b.file_fullpath and File.stat(b.file_fullpath).size == b.size
         open(b.file_fullpath, 'w+') do |f|
@@ -30,7 +29,7 @@ post '/file' do
 end
 
 get '/id/:hex_id' do
-  unless b = Blob.find_by_md5(params[:hex_id]).first
+  unless b = FaceApp::Blob.find_by_md5(params[:hex_id]).first
     status 404
     @mes = "not found"
   else

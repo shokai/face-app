@@ -7,15 +7,15 @@
       %li
         %ul
           %li
+            md5 : #{b.md5}
+          %li
+            type : #{b.mime_type}
+          %li
+            uploaded_at : #{b.uploaded_at}
+          %li
             - url = "#{app_root}/#{b.file_path}"
             - if b.mime_type =~ /^image/
               %img{:src => url}
             - else
               URL :
               %a{:href => url}= url
-          %li
-            type : #{b.mime_type}
-          %li
-            uploaded_at : #{b.uploaded_at}
-          %li
-            md5 : #{b.md5}
