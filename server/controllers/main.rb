@@ -7,5 +7,6 @@ get '/' do
   @per_page = (params[:per_page] || 20).to_i
 
   @msgs = FaceApp::Message.desc(:uploaded_at).skip(@per_page*(@page-1)).limit(@per_page)
+  @msgs_count = FaceApp::Message.count
   haml :index
 end

@@ -1,7 +1,7 @@
 - content_for :title do
   = @title
 
-%h2 files
+%h2 #{@msgs_count} files
 %div
   - @msgs.each do |msg|
     %div
@@ -22,3 +22,11 @@
           %a{:href => "#{url}/raw"} raw
         &nbsp;
         %span.mime_type [#{msg.blob.mime_type}]
+%div#page_navi
+  - if @page > 1
+    %a{:href => "#{app_root}?page=#{@page-1}&per_page=#{@per_page}"}
+      page #{@page-1}
+  &nbsp;&nbsp;
+  - if @msgs_count > @page*@per_page
+    %a{:href => "#{app_root}?page=#{@page+1}&per_page=#{@per_page}"}
+      page #{@page+1}
