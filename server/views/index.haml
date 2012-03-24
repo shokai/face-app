@@ -8,9 +8,10 @@
       %h3.md5= msg.md5
       %div
         %span.mime_type [#{msg.blob.mime_type}]
+        %span.size #{msg.blob.size.to_3digits} bytes
         %span.from from #{msg.from}
       %div
-        %span.uploaded_at at [#{msg.blob.uploaded_at}]
+        %span.uploaded_at at #{msg.blob.uploaded_at}
       %div
         - url = "#{app_root}/#{msg.blob.file_path}"
         - if msg.blob.mime_type =~ /^image/
